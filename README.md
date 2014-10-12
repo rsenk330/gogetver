@@ -1,4 +1,4 @@
-# go get _version_ [![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/rsenk330/gogetver)
+# go get _version_ [![wercker status](https://app.wercker.com/status/e1cb2de86ef4413606bf7e02e17fbc30/s/master "wercker status")](https://app.wercker.com/project/bykey/e1cb2de86ef4413606bf7e02e17fbc30) [![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/rsenk330/gogetver)
 
 Stop worrying about your Go dependencies breaking with newer versions.
 
