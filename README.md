@@ -1,6 +1,6 @@
 # go get _version_ [![wercker status](https://app.wercker.com/status/e1cb2de86ef4413606bf7e02e17fbc30/s/master "wercker status")](https://app.wercker.com/project/bykey/e1cb2de86ef4413606bf7e02e17fbc30) [![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/rsenk330/gogetver)
 
-Stop worrying about your Go dependencies breaking with newer versions.
+Stop worrying about the versions of your Go dependencies.
 
 _This is still very much a work in progress. Currently, the only supported VCS is git._
 
@@ -12,12 +12,12 @@ Pinning dependencies for your Go applications is easy. Simply add `gogetver.com`
 import "gogetver.com/github.com/rsenk330/gogetver"
 ```
 
-If you don't specify any version information, it will continue doing the default behavior (grabs master).
+If you don't specify any version information, it will use the default behavior of pulling master.
 
 To pin a version, add it to the end of the package path:
 
 ```go
-import "gogetver.com/github.com/rsenk330/gogetver.v1.0"
+import "gogetver.com/github.com/rsenk330/gogetver.v0.1"
 ```
 
 ### How Versions Work

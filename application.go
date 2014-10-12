@@ -66,6 +66,15 @@ func NewApp() *App {
 	}
 }
 
+// Home renders the home page.
+func (app *App) Home(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := app.Renderer.FromCache("home.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	tmpl.ExecuteWriter(nil, w)
+}
+
 // Package is the endpoint for the package detail page. If `?go-get=1` is passed,
 // the page with the properly formatted ``<meta name="go-import">`` tag is rendered
 // for the `go get` tool.
@@ -75,6 +84,10 @@ func (app *App) Package(w http.ResponseWriter, r *http.Request) {
 
 	if r.FormValue("go-get") == "1" {
 		tmpl, err := app.Renderer.FromCache("go_import.html")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
 		ctx := pongo2.Context{
 			"Path": path,
 			"Vcs":  "git",

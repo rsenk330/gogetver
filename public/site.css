@@ -1,0 +1,25 @@
+.home .container,
+.package .container {
+    width: 800px;
+}
+
+pre {
+    background-color: white;
+}
+
+.home article pre {
+    margin-bottom: 0;
+    word-break: normal;
+}
+
+.highlight-go .kn {
+    font-weight: bold;
+}
+
+.highlight-go .s {
+    color: #FEA64F;
+}
+
+.highlight-go.primary {
+    font-size: 20px;
+}

@@ -41,7 +41,8 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/{pkg:.+}/info/refs", app.GitService).Methods("GET")
 	router.HandleFunc("/{pkg:.+}/git-upload-pack", app.GitUploadPack).Methods("POST")
-	router.HandleFunc("/{pkg:.+}", app.Package).Methods("GET")
+	router.HandleFunc("/{pkg:.+}", app.Package).Methods("GET").Name("package")
+	router.HandleFunc("/", app.Home).Methods("GET").Name("home")
 
 	port := Getenv("PORT", "5000")
 	ip := Getenv("IP", "127.0.0.1")

@@ -1,8 +1,12 @@
 <html>
 <head>
-    <title>{% block title_front %}{% endblock title_front %}{% block title_end %}gogetver{% endblock title_end %}</title>
+    <title>{% block title_front %}{% endblock title_front %}{% block title_end %}Go Get Version{% endblock title_end %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/site.css">
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="author" href="/humans.txt">
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
 	{% block content %}{% endblock %}
 </body>
 </html>
