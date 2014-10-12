@@ -3,12 +3,38 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/stretchr/graceful"
 )
+
+// Getenv is just a simple helper to get an environment variable,
+// or the default if it is not set.
+func Getenv(name, def string) string {
+	val := os.Getenv(name)
+	if val == "" {
+		val = def
+	}
+	return val
+}
+
+// GetenvBool gets an environment variable that is epected to be a
+// boolean value.
+func GetenvBool(name string, def bool) bool {
+	val := Getenv(name, "")
+	if val == "" {
+		return def
+	}
+
+	boolVal, err := strconv.ParseBool(val)
+	if err != nil {
+		boolVal = false
+	}
+	return boolVal
+}
 
 func main() {
 	app := NewApp()
@@ -17,15 +43,8 @@ func main() {
 	router.HandleFunc("/{pkg:.+}/git-upload-pack", app.GitUploadPack).Methods("POST")
 	router.HandleFunc("/{pkg:.+}", app.Package).Methods("GET")
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5000"
-	}
-
-	ip := os.Getenv("IP")
-	if ip == "" {
-		ip = "127.0.0.1"
-	}
+	port := Getenv("PORT", "5000")
+	ip := Getenv("IP", "127.0.0.1")
 
 	n := negroni.Classic()
 	n.UseHandler(router)

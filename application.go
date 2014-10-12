@@ -5,12 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"regexp"
 	"sort"
 	"strings"
 
-	"github.com/google/go-github/github"
 	"github.com/gorilla/mux"
 	"gopkg.in/flosch/pongo2.v2"
 )
@@ -30,8 +28,7 @@ func (b ByLength) Less(i, j int) bool {
 
 // App holds the common items for the app.
 type App struct {
-	Renderer     *pongo2.TemplateSet
-	GithubClient *github.Client
+	Renderer *pongo2.TemplateSet
 }
 
 // PossibleVersions generates a set of possible version from the url.
@@ -55,21 +52,17 @@ func PossibleVersions(url string) []string {
 // NewApp creates a new App instance with the default configuration.
 func NewApp() *App {
 	renderer := pongo2.NewSet("templates")
-	githubClient := github.NewClient(nil)
 
-	hostname := os.Getenv("HOSTNAME")
-	if hostname == "" {
-		hostname = "gogetver.com"
-	}
+	hostname := Getenv("HOSTNAME", "gogetver.com")
+	debug := GetenvBool("DEBUG", false)
 
 	// Configure the pongo renderer
-	renderer.Debug = true
+	renderer.Debug = debug
 	renderer.SetBaseDirectory("./templates")
 	renderer.Globals["Hostname"] = hostname
 
 	return &App{
-		Renderer:     renderer,
-		GithubClient: githubClient,
+		Renderer: renderer,
 	}
 }
 

@@ -2,7 +2,7 @@
 
 Stop worrying about your Go dependencies breaking with newer versions.
 
-This is still very much a work in progress. Currently, the only supported VCS is git.
+_This is still very much a work in progress. Currently, the only supported VCS is git._
 
 ## Usage
 
@@ -12,16 +12,17 @@ Pinning dependencies for your Go applications is easy. Simply add `gogetver.com`
 import "gogetver.com/github.com/rsenk330/gogetver"
 ```
 
-If you don't specify any version information, it will continue doing the default behavior. To pin a version, add it to the end of the package path:
+If you don't specify any version information, it will continue doing the default behavior (grabs master).
+
+To pin a version, add it to the end of the package path:
 
 ```go
 import "gogetver.com/github.com/rsenk330/gogetver.v1.0"
-import "gogetver.com/github.com/rsenk330/gogetver.gh-pages"
 ```
 
 ### How Versions Work
 
-You are not forced into any particular naming scheme for your versions. This package will simply look for a branch or tag name matching the version you pass in.
+You are not forced into any particular naming scheme for your versions. This package will simply look for a branch or tag name matching the version specify.
 
 ## Development
 
@@ -43,4 +44,10 @@ You can also run it without `gin`:
 
 ```bash
 $ HOSTNAME=<HOSTNAME> go run server.go
+```
+
+## Testing
+
+```bash
+$ go test
 ```
