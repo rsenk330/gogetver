@@ -55,11 +55,14 @@ func NewApp() *App {
 
 	hostname := Getenv("HOSTNAME", "gogetver.com")
 	debug := GetenvBool("DEBUG", false)
+	googleAnalyticsID := Getenv("GA_TRACKING_ID", "")
 
 	// Configure the pongo renderer
 	renderer.Debug = debug
 	renderer.SetBaseDirectory("./templates")
+	renderer.Globals["Debug"] = debug
 	renderer.Globals["Hostname"] = hostname
+	renderer.Globals["GoogleAnalyticsID"] = googleAnalyticsID
 
 	return &App{
 		Renderer: renderer,
