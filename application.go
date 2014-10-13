@@ -26,11 +26,6 @@ func (b ByLength) Less(i, j int) bool {
 	return len(b[i]) < len(b[j])
 }
 
-// App holds the common items for the app.
-type App struct {
-	Renderer *pongo2.TemplateSet
-}
-
 // PossibleVersions generates a set of possible version from the url.
 func PossibleVersions(url string) []string {
 	var versions []string
@@ -49,23 +44,24 @@ func PossibleVersions(url string) []string {
 	return versions
 }
 
+// App holds the common items for the app.
+type App struct {
+	Config   *AppConfig
+	Renderer *pongo2.TemplateSet
+}
+
 // NewApp creates a new App instance with the default configuration.
-func NewApp() *App {
+func NewApp(config *AppConfig) *App {
 	renderer := pongo2.NewSet("templates")
 
-	hostname := Getenv("HOSTNAME", "gogetver.com")
-	debug := GetenvBool("DEBUG", false)
-	googleAnalyticsID := Getenv("GA_TRACKING_ID", "")
-
 	// Configure the pongo renderer
-	renderer.Debug = debug
-	renderer.SetBaseDirectory("./templates")
-	renderer.Globals["Debug"] = debug
-	renderer.Globals["Hostname"] = hostname
-	renderer.Globals["GoogleAnalyticsID"] = googleAnalyticsID
+	renderer.Debug = config.Debug
+	renderer.SetBaseDirectory(config.TemplatesDir)
+	renderer.Globals["Config"] = config
 
 	return &App{
 		Renderer: renderer,
+		Config:   config,
 	}
 }
 

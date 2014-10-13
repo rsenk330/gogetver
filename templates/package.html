@@ -9,8 +9,8 @@
     <hr>
     <a href="https://godoc.org/{{ Path }}"><img src="https://img.shields.io/badge/godoc-reference-blue.svg?style=flat" alt="GoDoc" data-canonical-src="https://img.shields.io/badge/godoc-reference-blue.svg?style=flat" style="max-width:100%;"></a>
     <h2>Usage</h2>
-    <pre class="primary highlight-go"><span class="kn">go get</span> <span class="s">"{{ Hostname }}/{{ Path }}"</span></pre>
+    <pre class="primary highlight-go"><span class="kn">go get</span> <span class="s">"{{ Config.Hostname }}/{{ Path }}"</span></pre>
     <p>To add this package to your project:</p>
-    <pre class="highlight-go"><span class="kn">import</span> <span class="s">"{{ Hostname }}/{{ Path }}"</span></pre>
+    <pre class="highlight-go"><span class="kn">import</span> <span class="s">"{{ Config.Hostname }}/{{ Path }}"</span></pre>
 </div>
 {% endblock content %}
