@@ -70,6 +70,7 @@ func (app *App) Home(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := app.Renderer.FromCache("home.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	tmpl.ExecuteWriter(nil, w)
 }

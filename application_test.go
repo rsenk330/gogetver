@@ -1,8 +1,13 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"sort"
 	"testing"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 func TestByLength(t *testing.T) {
@@ -58,5 +63,94 @@ func TestPossibleVersions(t *testing.T) {
 				break
 			}
 		}
+	}
+}
+
+func TestApp_Home(t *testing.T) {
+	app := NewApp(NewAppConfig())
+
+	req, err := http.NewRequest("GET", "/", nil)
+	if err != nil {
+		t.Error(err)
+	}
+
+	// Test normal case
+	w := httptest.NewRecorder()
+	app.Home(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected 200 response code, got %v.", w.Code)
+	}
+
+	doc, err := goquery.NewDocumentFromReader(w.Body)
+	if err != nil {
+		t.Errorf("Error reading response body: %v", err)
+	}
+
+	if !doc.Find("body").HasClass("home") {
+		t.Error("Expected <body class=\"home\"></body> to exist.")
+	}
+
+	// Test when template does not exist
+	config := NewAppConfig()
+	config.TemplatesDir = "/tmp/gdags"
+	app = NewApp(config)
+
+	w = httptest.NewRecorder()
+	app.Home(w, req)
+
+	if w.Code != http.StatusInternalServerError {
+		t.Errorf("Expected 500 response code, got %v", w.Code)
+	}
+}
+
+func TestApp_Package(t *testing.T) {
+	app := NewApp(NewAppConfig())
+	r := Router(app)
+	server := httptest.NewServer(r)
+	defer server.Close()
+
+	url, err := r.Get("package").URL("pkg", "github.com/rsenk330/gogetver")
+	if err != nil {
+		t.Error(err)
+	}
+
+	// Test non-go get request (render package page)
+	res, err := http.Get(fmt.Sprintf("%v%v", server.URL, url))
+	if err != nil {
+		t.Error(err)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected 200 response code, got %v", res.StatusCode)
+	}
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		t.Errorf("Error reading response body: %v", err)
+	}
+
+	if !doc.Find("body").HasClass("package") {
+		t.Error("Expected <body class=\"package\"></body> to exist.")
+	}
+
+	// Test go get request
+	res, err = http.Get(fmt.Sprintf("%v%v?go-get=1", server.URL, url))
+	if err != nil {
+		t.Error(err)
+	}
+
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("Expected 200 response code, got %v", res.StatusCode)
+	}
+
+	doc, err = goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		t.Errorf("Error reading response body: %v", err)
+	}
+
+	importPath, exists := doc.Find("meta[name=go-import]").Attr("content")
+	if exists && importPath != "gogetver.com/github.com/rsenk330/gogetver git https://gogetver.com/github.com/rsenk330/gogetver" {
+		t.Errorf("Expected go-import meta content to be 'gogetver.com/github.com/rsenk330/gogetver git https://gogetver.com/github.com/rsenk330/gogetver', got '%v'", importPath)
 	}
 }
