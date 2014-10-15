@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/codegangsta/negroni"
-	"github.com/gorilla/mux"
 	"github.com/phyber/negroni-gzip/gzip"
-	"github.com/stretchr/graceful"
+	"gogetver.com/github.com/codegangsta/negroni"
+	"gogetver.com/github.com/gorilla/mux"
+	"gogetver.com/github.com/stretchr/graceful"
 )
 
 // AppConfig holds the configuration for the site.

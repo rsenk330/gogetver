@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"regexp"
 	"sort"
 	"strings"
 
-	"github.com/gorilla/mux"
-	"gopkg.in/flosch/pongo2.v2"
+	"gogetver.com/github.com/flosch/pongo2.v2"
+	"gogetver.com/github.com/gorilla/mux"
 )
 
 // ByLength sorts an array of strings by length
@@ -27,10 +28,18 @@ func (b ByLength) Less(i, j int) bool {
 }
 
 // PossibleVersions generates a set of possible version from the url.
-func PossibleVersions(url string) []string {
+func PossibleVersions(u string) []string {
 	var versions []string
-	for i := 3; i <= strings.Count(url, ".")+1; i++ {
-		version := strings.SplitAfterN(url, ".", i)
+
+	// Parse just the path
+	parsedURL, err := url.Parse(u)
+	if err != nil {
+		return versions
+	}
+
+	urlPath := parsedURL.Path
+	for i := 3; i <= strings.Count(urlPath, ".")+1; i++ {
+		version := strings.SplitAfterN(urlPath, ".", i)
 		versions = append(versions, version[len(version)-1])
 	}
 
