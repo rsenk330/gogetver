@@ -6,10 +6,10 @@ _This is still very much a work in progress. Currently, the only supported VCS i
 
 ## Usage
 
-Pinning dependencies for your Go applications is easy. Simply add `gogetver.com` to the beginning of your import statements:
+Pinning dependencies for your Go applications is easy. Simply add the hostname you are running this from to the beginning of your import statements:
 
 ```go
-import "gogetver.com/github.com/rsenk330/gogetver"
+import "<HOSTNAME>/github.com/rsenk330/gogetver"
 ```
 
 If you don't specify any version information, it will use the default behavior of pulling master.
@@ -17,7 +17,7 @@ If you don't specify any version information, it will use the default behavior o
 To pin a version, add it to the end of the package path:
 
 ```go
-import "gogetver.com/github.com/rsenk330/gogetver.v0.1"
+import "<HOSTNAME>/github.com/rsenk330/gogetver.v0.1"
 ```
 
 ### How Versions Work
