@@ -1,6 +1,6 @@
 .home .container,
 .package .container {
-    width: 800px;
+    max-width: 800px;
 }
 
 pre {

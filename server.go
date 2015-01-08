@@ -6,10 +6,33 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/codegangsta/negroni"
-	"github.com/gorilla/mux"
-	"github.com/stretchr/graceful"
+	"github.com/phyber/negroni-gzip/gzip"
+	"gogetver.com/github.com/codegangsta/negroni"
+	"gogetver.com/github.com/gorilla/mux"
+	"gogetver.com/github.com/stretchr/graceful"
 )
+
+// AppConfig holds the configuration for the site.
+type AppConfig struct {
+	Port              string
+	IP                string
+	Debug             bool
+	Hostname          string
+	TemplatesDir      string
+	GoogleAnalyticsID string
+}
+
+// NewAppConfig creates the configuration from environment variables.
+func NewAppConfig() *AppConfig {
+	return &AppConfig{
+		Hostname:          Getenv("HOSTNAME", "gogetver.com"),
+		IP:                Getenv("IP", "127.0.0.1"),
+		Port:              Getenv("PORT", "5000"),
+		Debug:             GetenvBool("DEBUG", false),
+		TemplatesDir:      Getenv("TEMPLATE_ROOT", "./templates"),
+		GoogleAnalyticsID: Getenv("GA_TRACKING_ID", ""),
+	}
+}
 
 // Getenv is just a simple helper to get an environment variable,
 // or the default if it is not set.
@@ -36,19 +59,21 @@ func GetenvBool(name string, def bool) bool {
 	return boolVal
 }
 
-func main() {
-	app := NewApp()
+func Router(app *App) *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/{pkg:.+}/info/refs", app.GitService).Methods("GET")
 	router.HandleFunc("/{pkg:.+}/git-upload-pack", app.GitUploadPack).Methods("POST")
 	router.HandleFunc("/{pkg:.+}", app.Package).Methods("GET").Name("package")
 	router.HandleFunc("/", app.Home).Methods("GET").Name("home")
+	return router
+}
 
-	port := Getenv("PORT", "5000")
-	ip := Getenv("IP", "127.0.0.1")
+func main() {
+	app := NewApp(NewAppConfig())
 
 	n := negroni.Classic()
-	n.UseHandler(router)
+	n.Use(gzip.Gzip(gzip.DefaultCompression))
+	n.UseHandler(Router(app))
 
-	graceful.Run(fmt.Sprintf("%s:%s", ip, port), 10*time.Second, n)
+	graceful.Run(fmt.Sprintf("%s:%s", app.Config.IP, app.Config.Port), 10*time.Second, n)
 }
